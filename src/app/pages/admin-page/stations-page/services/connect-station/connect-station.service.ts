@@ -1,6 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { Station } from '@interface/station.interface';
-import { StationRequest } from '@type/create-station-request.type';
 
 type Mode = 'edit' | 'add';
 
@@ -21,9 +20,5 @@ export class ConnectStationService {
         if (this.isEditMode()) {
             this.selectedStationSignal.set(station);
         }
-    }
-
-    updateStation(station: StationRequest): void {
-        console.info(station);
     }
 }

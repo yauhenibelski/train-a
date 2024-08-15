@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,6 +35,7 @@ import { ConnectStationService } from '../services/connect-station/connect-stati
 })
 export class StationConnectorComponent {
     readonly stationList = input<StationList>();
+    readonly updateOne = output<StationRequest>();
 
     readonly isEditMode = this.connectStationService.isEditMode;
     readonly selectedStation = this.connectStationService.selectedStation;
@@ -101,10 +102,12 @@ export class StationConnectorComponent {
         const isStationExists = this.cities()?.includes(newStation.city);
 
         if (isStationExists) {
-            return city.setErrors({ err: 'Such station exists' });
+            city.setErrors({ err: 'Such station exists' });
+
+            return;
         }
 
-        return this.connectStationService.updateStation(newStation);
+        this.updateOne.emit(newStation);
     }
 
     updateStation(): void {
@@ -120,7 +123,7 @@ export class StationConnectorComponent {
             relations,
         };
 
-        this.connectStationService.updateStation(updateStation);
+        this.updateOne.emit(updateStation);
     }
 
     submit(): void {
