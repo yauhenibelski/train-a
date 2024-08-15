@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { StationList } from '@type/station-list.type';
 import { MapComponent } from './map/map.component';
 
 @Component({
@@ -9,4 +10,6 @@ import { MapComponent } from './map/map.component';
     styleUrl: './stations-page.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StationsPageComponent {}
+export class StationsPageComponent {
+    readonly stations = input<StationList>();
+}

@@ -9,7 +9,8 @@
             "@pages/*": ["./src/app/pages/*"],
             "@router/*": ["./src/app/router/*"],
             "@shared/*": ["./src/app/shared/*"],
-            "@type/*": ["./src/app/types/*"]
+            "@type/*": ["./src/app/types/*"],
+            "@store/*": ["./src/app/store/*"]
         },
         "outDir": "./dist/out-tsc",
         "strict": true,
