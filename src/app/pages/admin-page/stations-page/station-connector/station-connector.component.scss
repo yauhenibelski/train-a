@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-button-toggle-group {
+    justify-content: center;
+    margin: 10px 0;
+}
+
+mat-form-field {
+    margin-bottom: 5px;
+}
+
+.submit-btn {
+    align-self: end;
+}
