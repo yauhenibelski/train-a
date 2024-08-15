@@ -1,4 +1,4 @@
-interface ConnectedTo {
+export interface ConnectedTo {
     id: number;
     distance: number;
 }

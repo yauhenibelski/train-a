@@ -1,3 +1,8 @@
 :host {
     display: block;
 }
+
+.map-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minMax(400px, auto));
+}

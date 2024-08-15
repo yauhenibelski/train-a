@@ -1,1 +1,6 @@
-<app-map [stationList]="stations()" />
+<div class="map-wrap">
+    <app-map [stationList]="stations()" />
+    <p>settings</p>
+</div>
+
+<app-station-list [stationEntities]="stationEntities()" [stationList]="stations()" />

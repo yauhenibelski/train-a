@@ -13,8 +13,9 @@ import { ToMarkerPipe } from '../../pipe/to-marker/to-marker.pipe';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent {
-    readonly click = output<LeafletMouseEvent>();
     readonly stationList = input<StationList>();
+
+    readonly leafletClick = output<LeafletMouseEvent>();
 
     readonly options: MapOptions = {
         layers: [tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 })],

@@ -1,4 +1,9 @@
-<div leaflet [style.height.vh]="40" [leafletOptions]="options" (leafletClick)="click.emit($event)">
+<div
+    leaflet
+    [style.height.vh]="40"
+    [leafletOptions]="options"
+    (leafletClick)="leafletClick.emit($event)"
+>
     @for (station of stationList(); track station.id) {
         <div [leafletLayer]="station | toMarker"></div>
     }
