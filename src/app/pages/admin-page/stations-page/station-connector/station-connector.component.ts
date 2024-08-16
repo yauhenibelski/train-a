@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    Injector,
-    input,
-    output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Injector, input, output } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,12 +9,12 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { required } from '@shared/form-validators/required.validator';
 import { isLatitude } from '@shared/form-validators/is-latitude.validator';
 import { isLongitude } from '@shared/form-validators/is-longitude.validator';
-import { GetControlErrorMessagePipe } from '@shared/form-validators/pipes/get-control-error-message/get-control-error-message.pipe';
 import { StationRequest } from '@type/create-station-request.type';
 import { Station } from '@interface/station.interface';
 import { hasGaps } from '@shared/form-validators/has-gaps.validator';
 import { omit, pick } from 'lodash';
 import { LeafletMouseEvent } from 'leaflet';
+import { GetControlErrorMessagePipe } from '@shared/pipes/get-control-error-message/get-control-error-message.pipe';
 import { ConnectStationService } from '../services/connect-station/connect-station.service';
 
 @Component({
@@ -47,18 +39,6 @@ export class StationConnectorComponent {
 
     readonly isEditMode = this.connectStationService.isEditMode;
     readonly selectedStation = this.connectStationService.selectedStation;
-
-    readonly cities = computed(() => this.stationList()?.map(({ city }) => city));
-    readonly availableStations = computed(() => {
-        const stationList = this.stationList();
-        const selectedStation = this.selectedStation();
-
-        if (this.isEditMode()) {
-            return stationList?.filter(({ id }) => id !== selectedStation?.id);
-        }
-
-        return stationList;
-    });
 
     readonly connectionForm = this.formBuilder.nonNullable.group({
         city: ['', [required(), hasGaps]],
@@ -112,7 +92,9 @@ export class StationConnectorComponent {
 
         const newStation: StationRequest = { ...connectionFormValue, relations, id };
 
-        const isStationExists = this.cities()?.includes(newStation.city);
+        const isStationExists = this.stationList()
+            ?.map(({ city }) => city)
+            ?.includes(newStation.city);
 
         if (isStationExists) {
             city.setErrors({ err: 'Such station exists' });
