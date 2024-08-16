@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    Injector,
+    input,
+    output,
+} from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -65,7 +73,10 @@ export class StationConnectorComponent {
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly connectStationService: ConnectStationService,
-    ) {}
+        private readonly injector: Injector,
+    ) {
+        this.watchForModeUpdate();
+    }
 
     toggleMode(): void {
         this.connectionForm.reset();
@@ -76,7 +87,9 @@ export class StationConnectorComponent {
 
     selectStation(station: Station): void {
         this.connectStationService.selectStation(station);
+    }
 
+    updateFormValue(): void {
         const selectedStation = this.selectedStation();
 
         if (selectedStation) {
@@ -144,6 +157,17 @@ export class StationConnectorComponent {
                 city: city.getRawValue(),
             });
         }
+    }
+
+    watchForModeUpdate(): void {
+        effect(
+            () => {
+                if (this.selectedStation() && this.isEditMode()) {
+                    this.updateFormValue();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     get isFormValid(): boolean {

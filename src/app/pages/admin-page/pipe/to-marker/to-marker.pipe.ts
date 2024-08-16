@@ -7,7 +7,9 @@ import { Marker, marker, icon, Icon } from 'leaflet';
     standalone: true,
 })
 export class ToMarkerPipe implements PipeTransform {
-    transform({ city, latitude, longitude }: Station): Marker {
+    transform(station: Station, eventCb: (station: Station) => void): Marker {
+        const { city, latitude, longitude } = station;
+
         return marker([latitude, longitude], {
             icon: icon({
                 ...Icon.Default.prototype.options,
@@ -15,6 +17,10 @@ export class ToMarkerPipe implements PipeTransform {
                 iconRetinaUrl: 'assets/marker-icon-2x.png',
                 shadowUrl: 'assets/marker-shadow.png',
             }),
-        }).bindPopup(city);
+        })
+            .bindPopup(city)
+            .addEventListener('click', () => {
+                eventCb(station);
+            });
     }
 }

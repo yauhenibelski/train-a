@@ -16,7 +16,11 @@
         <!-- Select city -->
         <mat-form-field appearance="outline">
             <mat-label>Select city</mat-label>
-            <mat-select required="true" (selectionChange)="selectStation($event.value)">
+            <mat-select
+                required="true"
+                [value]="selectedStation()"
+                (selectionChange)="selectStation($event.value)"
+            >
                 @for (station of stationList(); track station.id) {
                     <mat-option [value]="station">{{ station.city }}</mat-option>
                 }

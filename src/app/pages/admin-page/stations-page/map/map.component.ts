@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { MapOptions, tileLayer, latLng, LeafletMouseEvent } from 'leaflet';
 import { StationList } from '@type/station-list.type';
+import { Station } from '@interface/station.interface';
 import { ToMarkerPipe } from '../../pipe/to-marker/to-marker.pipe';
 import { ConnectStationService } from '../services/connect-station/connect-station.service';
 
@@ -37,6 +38,10 @@ export class MapComponent {
         layers: [tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 })],
         zoom: 5,
         center: this.latLngCash,
+    };
+
+    selectStation = (station: Station): void => {
+        this.connectStationService.selectStation(station);
     };
 
     constructor(readonly connectStationService: ConnectStationService) {}
