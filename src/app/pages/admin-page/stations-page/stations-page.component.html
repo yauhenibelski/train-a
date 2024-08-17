@@ -1,0 +1,8 @@
+<mat-card appearance="outlined">
+    <div class="map-wrap">
+        <app-map [stationList]="stations()" (selectLeaflet)="connector.setLeaflet($event)" />
+        <app-station-connector #connector [stationList]="stations()" />
+    </div>
+
+    <app-station-list [stationEntities]="stationEntities()" />
+</mat-card>
