@@ -1,0 +1,33 @@
+<div *ngFor="let carriage of carriages" class="carriage-block">
+    <div class="carriage_header">
+        <h6>{{ carriage.name }}</h6>
+        <p class="seats_count">x seats</p>
+    </div>
+
+    <div class="carriage_seats-box">
+        <div *ngFor="let row of getRows(carriage.rows); let rowIndex = index" class="carriage_row">
+            <div class="right_row">
+                <div
+                    *ngFor="let seat of getRowSeats(carriage.rightSeats); let seatIndex = index"
+                    class="seat"
+                >
+                    {{
+                        rowIndex * (carriage.leftSeats + carriage.rightSeats) +
+                            (carriage.rightSeats + seatIndex + 1)
+                    }}
+                    <!-- Нумерация правых сидений -->
+                </div>
+            </div>
+
+            <div class="left_row">
+                <div
+                    *ngFor="let seat of getRowSeats(carriage.leftSeats); let seatIndex = index"
+                    class="seat"
+                >
+                    {{ rowIndex * (carriage.leftSeats + carriage.rightSeats) + (seatIndex + 1) }}
+                    <!-- Нумерация левых сидений -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
