@@ -15,51 +15,22 @@ $seats-gap: 8px;
     padding: 50px;
 }
 
-.carriage-block {
-    display: inline-flex;
+.empty-seat {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+}
+
+.seating-container {
+    display: flex;
     flex-direction: column;
-}
-
-.carriage_header {
-    display: flex;
-    gap: 10px;
-}
-
-.seats_count {
-    @include flex-center;
-    padding: 0px 10px;
-    border: 1px solid $border-color;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.carriage_seats-box {
     padding: 15px 50px;
-    display: flex;
     gap: $seats-gap;
     border: 1px solid $border-color;
     border-radius: 20px;
 }
 
-.seat {
-    @include flex-center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid $border-color;
-    border-radius: 5px;
-    background-color: rgb(0, 0, 147);
-    color: white;
-}
-
-.carriage_row {
+.seating-row {
     display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.right_row,
-.left_row {
-    display: flex;
-    flex-direction: column;
     gap: $seats-gap;
 }

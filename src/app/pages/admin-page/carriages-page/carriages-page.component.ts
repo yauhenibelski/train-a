@@ -1,14 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-
-interface Carriage {
-    code: string;
-    name: string;
-    rows: number;
-    leftSeats: number;
-    rightSeats: number;
-}
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Carriage, RotatedSeat } from '@interface/carriage.interface';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CarriageService } from './services/carriage.service';
+import { SeatComponent } from './seat/seat.component';
 
 @Component({
     selector: 'app-carriages-page',
@@ -16,48 +11,31 @@ interface Carriage {
     templateUrl: './carriages-page.component.html',
     styleUrls: ['./carriages-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule],
+    imports: [SeatComponent, NgFor, NgIf, CommonModule],
 })
 export class CarriagesPageComponent implements OnInit {
-    totalSeats!: number;
-    carriages: Carriage[] = [];
+    carriages$: Observable<Carriage[]> = this.carriageService.getCarriages();
+    rotatedSeatingMatrices: { [key: string]: RotatedSeat[][] } = {};
 
-    constructor(
-        private readonly http: HttpClient,
-        private readonly cdr: ChangeDetectorRef,
-    ) {}
+    constructor(private readonly carriageService: CarriageService) {}
 
     ngOnInit(): void {
-        this.getCarriages();
+        this.loadCarriages();
     }
 
-    getCarriages(): void {
-        this.http.get<Carriage[]>('/api/carriage').subscribe({
-            next: response => {
-                this.carriages = response;
-                this.totalSeats = response.reduce(
-                    (sum, carriage) => sum + carriage.leftSeats + carriage.rightSeats,
-                    0,
-                );
-                this.cdr.detectChanges();
-            },
-            error: (error: unknown) => {
-                console.error('Ошибка при выполнении запроса', error);
-                this.carriages = [];
-                this.cdr.detectChanges();
-            },
+    private loadCarriages(): void {
+        this.carriageService.loadCarriages();
+
+        this.carriages$.subscribe(carriages => {
+            carriages.forEach(carriage => {
+                if (carriage.seatingMatrix && carriage.seatingMatrix.length) {
+                    const rotatedMatrix = this.carriageService.rotateSeatingMatrix(
+                        carriage.seatingMatrix,
+                    );
+
+                    this.rotatedSeatingMatrices[carriage.name] = rotatedMatrix;
+                }
+            });
         });
-    }
-
-    getRows(rows: number): number[] {
-        return Array.from({ length: rows }, (_, index) => index);
-    }
-
-    getRowSeats(seats: number): number[] {
-        return Array.from({ length: seats }, (_, index) => index);
-    }
-
-    getSeatNumber(rowIndex: number, seatIndex: number): string {
-        return `${(rowIndex + 1) * 10 + seatIndex + 1}`;
     }
 }

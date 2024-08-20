@@ -1,31 +1,20 @@
-<div *ngFor="let carriage of carriages" class="carriage-block">
-    <div class="carriage_header">
-        <h6>{{ carriage.name }}</h6>
-        <p class="seats_count">x seats</p>
-    </div>
-
-    <div class="carriage_seats-box">
-        <div *ngFor="let row of getRows(carriage.rows); let rowIndex = index" class="carriage_row">
-            <div class="right_row">
-                <div
-                    *ngFor="let seat of getRowSeats(carriage.rightSeats); let seatIndex = index"
-                    class="seat"
-                >
-                    {{
-                        rowIndex * (carriage.leftSeats + carriage.rightSeats) +
-                            (carriage.rightSeats + seatIndex + 1)
-                    }}
-                    <!-- Нумерация правых сидений -->
-                </div>
-            </div>
-
-            <div class="left_row">
-                <div
-                    *ngFor="let seat of getRowSeats(carriage.leftSeats); let seatIndex = index"
-                    class="seat"
-                >
-                    {{ rowIndex * (carriage.leftSeats + carriage.rightSeats) + (seatIndex + 1) }}
-                    <!-- Нумерация левых сидений -->
+<div *ngFor="let carriage of carriages$ | async">
+    <h3>{{ carriage.name }}</h3>
+    <div *ngIf="rotatedSeatingMatrices[carriage.name]">
+        <div class="seating-container">
+            <div *ngFor="let row of rotatedSeatingMatrices[carriage.name]">
+                <div class="seating-row">
+                    <ng-container *ngFor="let seat of row">
+                        <ng-container *ngIf="seat.isFree !== '-'">
+                            <app-seat
+                                [value]="seat.isFree"
+                                [seatNumber]="seat.seat_number + 1"
+                            ></app-seat>
+                        </ng-container>
+                        <ng-container *ngIf="seat.isFree === '-'">
+                            <div class="empty-seat"></div>
+                        </ng-container>
+                    </ng-container>
                 </div>
             </div>
         </div>
