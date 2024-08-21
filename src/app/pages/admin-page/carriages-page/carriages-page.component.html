@@ -2,13 +2,20 @@
     <h3>{{ carriage.name }}</h3>
     <div *ngIf="rotatedSeatingMatrices[carriage.name]">
         <div class="seating-container">
-            <div *ngFor="let row of rotatedSeatingMatrices[carriage.name]">
+            <div *ngFor="let row of rotatedSeatingMatrices[carriage.name]; let rowIndex = index">
                 <div class="seating-row">
-                    <ng-container *ngFor="let seat of row">
+                    <ng-container *ngFor="let seat of row; let columnIndex = index">
                         <ng-container *ngIf="seat.isFree !== '-'">
                             <app-seat
                                 [value]="seat.isFree"
                                 [seatNumber]="seat.seat_number + 1"
+                                (seatClicked)="
+                                    onSeatClick(
+                                        carriage.code,
+                                        columnIndex,
+                                        carriage.leftSeats + carriage.rightSeats - rowIndex
+                                    )
+                                "
                             ></app-seat>
                         </ng-container>
                         <ng-container *ngIf="seat.isFree === '-'">

@@ -9,5 +9,10 @@ export const CarriagesActions = createActionGroup({
         'Set all': (carriages: CarriageList) => ({ carriages }),
         'Add one': props<Carriage>(),
         'Remove one': (code: string) => ({ code }),
+        'Toggle seat': (code: string, rowIndex: number, columnIndex: number) => ({
+            code,
+            rowIndex,
+            columnIndex,
+        }),
     },
 });
