@@ -1,18 +1,10 @@
-import { Carriage } from '@interface/carriage.interface';
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { CarriageList } from '@type/carriage-list.type';
+import { createActionGroup, emptyProps } from '@ngrx/store';
+import { Carriages } from '@type/carriages.type';
 
-export const CarriagesActions = createActionGroup({
-    source: 'Carriage',
+export const CarriageActions = createActionGroup({
+    source: 'Carriages',
     events: {
         'Load all': emptyProps(),
-        'Set all': (carriages: CarriageList) => ({ carriages }),
-        'Add one': props<Carriage>(),
-        'Remove one': (code: string) => ({ code }),
-        'Toggle seat': (code: string, rowIndex: number, columnIndex: number) => ({
-            code,
-            rowIndex,
-            columnIndex,
-        }),
+        'Set all': (carriages: Carriages) => ({ carriages }),
     },
 });

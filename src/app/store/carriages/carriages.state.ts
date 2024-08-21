@@ -5,8 +5,6 @@ export const CARRIAGES_FEATURE = 'carriages';
 
 export type CarriagesState = EntityState<Carriage>;
 
-export const carriagesAdapter = createEntityAdapter<Carriage>({
-    selectId: (carriage: Carriage) => carriage.code,
-});
+export const carriageAdapter = createEntityAdapter<Carriage>({ selectId: ({ name }) => name });
 
-export const carriagesInitialState = carriagesAdapter.getInitialState();
+export const carriageInitialState = carriageAdapter.getInitialState();
