@@ -11,7 +11,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import * as storeEffects from '@store/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { EMPTY, iif, tap } from 'rxjs';
+import { catchError, EMPTY, iif, tap } from 'rxjs';
 import { serialize, parse } from 'cookie';
 import { routes } from './app.routes';
 import { storeReducer } from './store/reducer';
@@ -58,6 +58,7 @@ export const appConfig: ApplicationConfig = {
                             tap(({ token }) => {
                                 document.cookie = serialize('token', token);
                             }),
+                            catchError(() => EMPTY),
                         ),
                 );
             },
