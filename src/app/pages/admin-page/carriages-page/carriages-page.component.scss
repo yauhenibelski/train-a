@@ -1,36 +1,15 @@
-$border-color: rgb(192, 192, 192);
-$seats-gap: 8px;
-
-@mixin flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 :host {
     display: flex;
-    gap: 40px;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 20px;
     padding: 50px;
 }
 
-.empty-seat {
-    width: 40px;
-    height: 40px;
-    display: inline-block;
-}
-
-.seating-container {
-    display: flex;
-    flex-direction: column;
-    padding: 15px 50px;
-    gap: $seats-gap;
-    border: 1px solid $border-color;
-    border-radius: 20px;
-}
-
-.seating-row {
-    display: flex;
-    gap: $seats-gap;
+@media screen and (min-width: 769px) {
+    :host {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 50px clamp(30px, 3.5vw, 50px);
+    }
 }

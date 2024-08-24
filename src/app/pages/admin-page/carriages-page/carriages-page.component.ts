@@ -1,13 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Carriage, RotatedSeat } from '@interface/carriage.interface';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Store } from '@ngrx/store';
-import { CarriagesActions } from '@store/carriages/carriages.actions';
-import { selectAllCarriages } from '@store/carriages/carriages.selector';
-import { selectAllStations } from '@store/stations/stations.selectors';
-import { CarriageService } from './services/carriage.service';
-import { SeatComponent } from './seat/seat.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CarriageListComponent } from '@shared/components/carriage-list/carriage-list.component';
+import { NgIf } from '@angular/common';
+import { CarriagesFormComponent } from './carriages-form/carriages-form.component';
+import { CreateCarriageButtonComponent } from './create-carriage-button/create-carriage-button.component';
+import { CarriageFormService } from './carriages-form/services/carriage-form.service';
 
 @Component({
     selector: 'app-carriages-page',
@@ -15,51 +11,29 @@ import { SeatComponent } from './seat/seat.component';
     templateUrl: './carriages-page.component.html',
     styleUrls: ['./carriages-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SeatComponent, NgFor, NgIf, CommonModule],
+    imports: [CarriageListComponent, CarriagesFormComponent, CreateCarriageButtonComponent, NgIf],
 })
-export class CarriagesPageComponent implements OnInit {
-    carriages$: Observable<Carriage[]> = this.carriageService.getCarriages();
-    rotatedSeatingMatrices: { [key: string]: RotatedSeat[][] } = {};
+export class CarriagesPageComponent {
+    isFormVisible = false;
 
-    constructor(
-        private readonly carriageService: CarriageService,
-        private readonly store: Store,
-    ) {}
-
-    ngOnInit(): void {
-        this.loadCarriages();
-        this.logCarriagesFromStore(); // Вывод состояния carriages при инициализации
-    }
-
-    private loadCarriages(): void {
-        this.carriageService.loadCarriages();
-
-        this.carriages$.subscribe(carriages => {
-            carriages.forEach(carriage => {
-                if (carriage.seatingMatrix && carriage.seatingMatrix.length) {
-                    const rotatedMatrix = this.carriageService.rotateSeatingMatrix(
-                        carriage.seatingMatrix,
-                    );
-
-                    this.rotatedSeatingMatrices[carriage.name] = rotatedMatrix;
-                }
-            });
+    constructor(private readonly carriageFormService: CarriageFormService) {
+        this.carriageFormService.isFormVisible$.subscribe(visible => {
+            this.isFormVisible = visible;
         });
     }
 
-    private logCarriagesFromStore(): void {
-        this.store.select(selectAllCarriages).subscribe(entities => {
-            console.info('Current carriages on stations page in store:', entities);
-        });
-        this.store.select(selectAllStations).subscribe(entities => {
-            console.info('Current stations in store:', entities);
-        });
-    }
+    openCreateForm() {
+        this.carriageFormService.setEditForm(false);
+        this.carriageFormService.setCreateForm(true);
 
-    onSeatClick(code: string, rowIndex: number, columnIndex: number): void {
-        this.store.dispatch(CarriagesActions.toggleSeat(code, rowIndex, columnIndex));
-        console.info(
-            `Toggled seat at row: ${rowIndex}, column: ${columnIndex} for carriage code: ${code}`,
-        );
+        const initialData = {
+            code: 'name',
+            name: 'name',
+            rows: 1,
+            leftSeats: 1,
+            rightSeats: 1,
+        };
+
+        this.carriageFormService.updateCarriageData(initialData);
     }
 }
