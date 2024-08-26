@@ -25,7 +25,7 @@ import { CarriageService } from './services/carriage.service';
 })
 export class CarriageComponent implements OnInit, OnChanges {
     @Input() carriage!: Carriage;
-    @Input() isSmallModel?: boolean;
+    @Input() isSmallModel: boolean | null = null;
     rotatedSeatingMatrices: Seat[][] = [];
 
     constructor(

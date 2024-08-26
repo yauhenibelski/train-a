@@ -1,4 +1,4 @@
-<app-carriages-form *ngIf="isFormVisible"></app-carriages-form>
+<app-carriages-form *ngIf="isFormVisible$ | async"></app-carriages-form>
 
 <app-create-carriage-button (click)="openCreateForm()"></app-create-carriage-button>
 

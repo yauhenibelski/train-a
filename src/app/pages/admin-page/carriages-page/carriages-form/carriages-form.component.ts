@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarriageComponent } from '@shared/components/carriage/carriage.component';
 import { HttpClient } from '@angular/common/http';
@@ -20,11 +20,11 @@ import { CarriageFormService } from './services/carriage-form.service';
     styleUrls: ['./carriages-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriagesFormComponent implements OnInit {
+export class CarriagesFormComponent {
     carriageForm: FormGroup;
     carriages$!: Observable<Carriage[]>;
-    isCreate = false;
-    isEdit = false;
+    isCreate$!: Observable<boolean>;
+    isEdit$!: Observable<boolean>;
 
     constructor(
         private readonly fb: FormBuilder,
@@ -38,17 +38,11 @@ export class CarriagesFormComponent implements OnInit {
             leftSeats: [1, [Validators.required, Validators.min(1), Validators.max(20)]],
             rightSeats: [1, [Validators.required, Validators.min(1), Validators.max(20)]],
         });
-    }
 
-    ngOnInit() {
         this.carriages$ = this.store.select(selectAllCarriages);
-        this.carriageFormService.isEditForm$.subscribe(isEdit => {
-            this.isEdit = isEdit;
-        });
 
-        this.carriageFormService.isCreateForm$.subscribe(isCreate => {
-            this.isCreate = isCreate;
-        });
+        this.isEdit$ = this.carriageFormService.isEditForm$;
+        this.isCreate$ = this.carriageFormService.isCreateForm$;
 
         this.carriageFormService.carriageData$.subscribe(data => {
             this.carriageForm.patchValue(data);
@@ -58,7 +52,7 @@ export class CarriagesFormComponent implements OnInit {
     onSave() {
         const formData = this.carriageForm.value;
 
-        if (this.isCreate && this.carriageForm.valid) {
+        if (this.isCreate$ && this.carriageForm.valid) {
             const carriageData = {
                 ...formData,
                 code: this.carriageFormService.generateCode(formData.name),
@@ -66,7 +60,7 @@ export class CarriagesFormComponent implements OnInit {
 
             this.store.dispatch(CarriageActions.addOne(carriageData));
             this.closeWindow();
-        } else if (this.isEdit && this.carriageForm.valid) {
+        } else if (this.isEdit$ && this.carriageForm.valid) {
             const carriageData = {
                 ...formData,
                 code: this.carriageFormService.getCode(),

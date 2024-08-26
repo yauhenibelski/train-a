@@ -13,7 +13,7 @@ import { SeatBackgroundDirective } from './directives/seat-background.directive'
 export class SeatComponent {
     @Input() value: string | number = 1;
     @Input() seatNumber = 1;
-    @Input() isSmallModel?: boolean;
+    @Input() isSmallModel: boolean | null = null;
     @Output() seatClicked = new EventEmitter<number>();
 
     onSeatClick(): void {

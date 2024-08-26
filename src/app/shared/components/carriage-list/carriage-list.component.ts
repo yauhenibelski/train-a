@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CarriageActions } from '@store/carriages/carriages.actions';
 import { selectAllCarriages } from '@store/carriages/carriages.selector';
@@ -15,14 +15,11 @@ import { CarriageComponent } from '../carriage/carriage.component';
     styleUrls: ['./carriage-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriageListComponent implements OnInit {
+export class CarriageListComponent {
     carriages$: Observable<Carriages>;
 
     constructor(private readonly store: Store) {
         this.carriages$ = this.store.select(selectAllCarriages);
-    }
-
-    ngOnInit() {
         this.store.dispatch(CarriageActions.loadAll());
     }
 }
