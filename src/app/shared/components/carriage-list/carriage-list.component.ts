@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CarriageActions } from '@store/carriages/carriages.actions';
 import { selectAllCarriages } from '@store/carriages/carriages.selector';
 import { Carriages } from '@type/carriages.type';
 import { Observable } from 'rxjs';
@@ -20,6 +19,5 @@ export class CarriageListComponent {
 
     constructor(private readonly store: Store) {
         this.carriages$ = this.store.select(selectAllCarriages);
-        this.store.dispatch(CarriageActions.loadAll());
     }
 }
