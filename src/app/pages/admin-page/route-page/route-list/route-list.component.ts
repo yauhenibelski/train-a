@@ -19,6 +19,7 @@ import { Station } from '@interface/station.interface';
 import { Dictionary } from '@ngrx/entity';
 import { JoinPipe } from '@pages/admin-page/pipe/join/join.pipe';
 import { ScrollToTopDirective } from '@shared/directives/scroll-to-top/scroll-to-top.directive';
+import { RouterModule } from '@angular/router';
 import { RouteListItem } from './route-list-item.type';
 import { RouteDetailComponent } from './route-detail/route-detail.component';
 
@@ -35,6 +36,7 @@ import { RouteDetailComponent } from './route-detail/route-detail.component';
         JoinPipe,
         ScrollToTopDirective,
         RouteDetailComponent,
+        RouterModule,
     ],
     templateUrl: './route-list.component.html',
     styleUrl: './route-list.component.scss',
