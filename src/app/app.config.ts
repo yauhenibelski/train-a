@@ -6,15 +6,17 @@ import {
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import * as storeEffects from '@store/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { catchError, EMPTY, iif, tap } from 'rxjs';
-import { serialize, parse } from 'cookie';
-import { routes } from './app.routes';
+import { setAccessTokenInterceptor } from '@core/interceptors/set-access-token/set-access-token.interceptor';
+import { handleInvalidTokenInterceptor } from '@core/interceptors/handle-invalid-token/handle-invalid-token.interceptor';
+import { setUserStatus } from '@core/initializations/set-user-status';
+import { AuthService } from '@shared/service/auth/auth.service';
 import { storeReducer } from './store/reducer';
+import { routes } from './router/app.routes';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -22,47 +24,15 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes, withComponentInputBinding()),
         provideAnimationsAsync(),
         provideHttpClient(
-            withInterceptors([
-                //! temporarily until creating login page
-                (req, next) => {
-                    const token = parse(document.cookie)['token'];
-
-                    return token
-                        ? next(
-                              req.clone({
-                                  setHeaders: {
-                                      Authorization: `Bearer ${token}`,
-                                  },
-                              }),
-                          )
-                        : next(req);
-                },
-            ]),
+            withInterceptors([setAccessTokenInterceptor, handleInvalidTokenInterceptor]),
         ),
         provideStore(storeReducer),
         provideEffects(storeEffects),
         provideStoreDevtools({ logOnly: !isDevMode() }),
         {
-            //! temporarily until creating login page
             provide: APP_INITIALIZER,
-            useFactory: (httpClient: HttpClient) => () => {
-                return iif(
-                    () => !!parse(document.cookie)['token'],
-                    EMPTY,
-                    httpClient
-                        .post<{ token: string }>('/api/signin', {
-                            email: 'admin@admin.com',
-                            password: 'my-password',
-                        })
-                        .pipe(
-                            tap(({ token }) => {
-                                document.cookie = serialize('token', token);
-                            }),
-                            catchError(() => EMPTY),
-                        ),
-                );
-            },
-            deps: [HttpClient],
+            useFactory: setUserStatus,
+            deps: [AuthService],
             multi: true,
         },
     ],
