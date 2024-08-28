@@ -5,6 +5,7 @@ import {
     OnInit,
     OnChanges,
     SimpleChanges,
+    Inject,
 } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Carriage } from '@interface/carriage.interface';
@@ -12,8 +13,8 @@ import { Seat } from '@interface/seat.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CarriageFormService } from '@pages/admin-page/carriages-page/carriages-form/services/carriage-form.service';
-import { SeatComponent } from '../seat/seat.component';
 import { CarriageService } from './services/carriage.service';
+import { SeatComponent } from '../seat/seat.component';
 
 @Component({
     selector: 'app-carriage',
@@ -21,7 +22,7 @@ import { CarriageService } from './services/carriage.service';
     templateUrl: './carriage.component.html',
     styleUrls: ['./carriage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SeatComponent, NgFor, NgIf, MatButtonModule, MatIconModule, NgClass],
+    imports: [NgFor, NgIf, MatButtonModule, MatIconModule, NgClass, SeatComponent],
 })
 export class CarriageComponent implements OnInit, OnChanges {
     @Input() carriage!: Carriage;
@@ -29,7 +30,7 @@ export class CarriageComponent implements OnInit, OnChanges {
     rotatedSeatingMatrices: Seat[][] = [];
 
     constructor(
-        private readonly carriageService: CarriageService,
+        @Inject(CarriageService) private readonly carriageService: CarriageService,
         private readonly carriageFormService: CarriageFormService,
     ) {}
 
