@@ -11,6 +11,14 @@ export const routes: Routes = [
         canMatch: [isAdminGuard],
     },
     {
+        path: 'orders',
+        loadComponent: () =>
+            import('@pages/my-orders-page/my-orders-page.component').then(
+                ({ MyOrdersPageComponent }) => MyOrdersPageComponent,
+            ),
+        // canMatch: [isAdminGuard],
+    },
+    {
         path: 'signup',
         loadComponent: () =>
             import('@pages/sing-up/sing-up.component').then(

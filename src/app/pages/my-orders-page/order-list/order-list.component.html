@@ -1,0 +1,15 @@
+<ng-container *ngIf="orders$ | async as orders">
+    <div *ngIf="orders.length; else noOrders" class="orders-list">
+        <div *ngFor="let order of orders" class="order-item">
+            <app-order
+                [order]="order"
+                [carriageMap]="carriageMap"
+                [users]="users"
+                (orderCanceled)="onOrderCanceled()"
+            ></app-order>
+        </div>
+    </div>
+    <ng-template #noOrders>
+        <div>No orders available</div>
+    </ng-template>
+</ng-container>

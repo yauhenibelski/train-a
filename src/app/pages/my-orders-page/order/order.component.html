@@ -1,0 +1,80 @@
+<div class="order_header">
+    <div class="order-detail">
+        <span class="detail-value">{{ getUserName(order.userId) }}</span>
+    </div>
+    <button
+        *ngIf="order.status === 'active'"
+        mat-icon-button
+        type="button"
+        class="delete_button"
+        (click)="onCancelOrder(order.id)"
+    >
+        <mat-icon>delete</mat-icon>
+    </button>
+</div>
+
+<div class="startEndData_box">
+    <div class="startEndDetails">
+        <div class="order-detail">
+            <span class="detail-label">Start station: city</span>
+            <span class="detail-value">{{ order.path[0] }}</span>
+        </div>
+        <div class="order-detail">
+            <span class="detail-label">Start time:</span>
+            <span class="detail-value">{{ formatDate(order.schedule.segments[0].time[0]) }}</span>
+        </div>
+    </div>
+
+    <div class="startEndDetails">
+        <div class="order-detail">
+            <span class="detail-label">End station: city</span>
+            <span class="detail-value">{{ order.path[order.path.length - 1] }}</span>
+        </div>
+        <div class="order-detail">
+            <span class="detail-label">End time:</span>
+            <span class="detail-value">
+                {{
+                    formatDate(order.schedule.segments[order.schedule.segments.length - 1].time[1])
+                }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="order-detail">
+    <span class="detail-label">Duration:</span>
+    <span class="detail-value">
+        {{
+            calculateTripDuration(
+                order.schedule.segments[0].time[0],
+                order.schedule.segments[order.schedule.segments.length - 1].time[1]
+            )
+        }}
+    </span>
+</div>
+
+<div class="seat_data">
+    <div class="order-detail">
+        <span class="detail-label">Car number:</span>
+        <span class="detail-value">{{ getCarriageNumber() }}</span>
+    </div>
+    <div class="order-detail">
+        <span class="detail-label">Seat number:</span>
+        <span class="detail-value">{{ order.seatId }}</span>
+    </div>
+</div>
+<div class="order-detail price_data">
+    <span class="detail-label">Price:</span>
+    <span class="detail-value">
+        {{ calculateTotalPrice(order.schedule.segments, getCarriageName()) }}$
+    </span>
+</div>
+
+<div class="order_footer">
+    <div class="order-detail">
+        <span class="detail-value">{{ getCarriageName() }}</span>
+    </div>
+    <div class="order-detail">
+        <span class="detail-value">{{ order.status }}</span>
+    </div>
+</div>

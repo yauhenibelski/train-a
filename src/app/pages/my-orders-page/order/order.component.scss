@@ -1,0 +1,36 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.order_header,
+.order_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seat_data {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.startEndData_box {
+    display: flex;
+    gap: 20px;
+}
+
+.startEndDetails {
+    padding: 10px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+.price_data {
+    font-weight: bold;
+}
