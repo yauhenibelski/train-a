@@ -12,14 +12,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { Order } from '@interface/order.interface';
 import { RideSegment } from '@interface/ride.interface';
 import { UserList } from '@type/order.type';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, switchMap } from 'rxjs';
 import { OrdersService } from '@pages/my-orders-page/services/orders.service';
 import { AuthService } from '@shared/service/auth/auth.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { OrderConfirmDeleteComponent } from '../order-confirm-delete/order-confirm-delete.component';
 
 @Component({
     selector: 'app-order',
     standalone: true,
-    imports: [NgFor, CommonModule, MatButtonModule, MatIconModule],
+    imports: [
+        NgFor,
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatSnackBarModule,
+    ],
     templateUrl: './order.component.html',
     styleUrls: ['./order.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +41,11 @@ export class OrderComponent {
     @Output() orderCanceled = new EventEmitter<number>();
     readonly authService = inject(AuthService);
 
-    constructor(private readonly ordersService: OrdersService) {}
+    constructor(
+        private readonly ordersService: OrdersService,
+        private readonly dialog: MatDialog,
+        private readonly snackBar: MatSnackBar,
+    ) {}
 
     getUserName(userId: number): string {
         const user = this.users.find(u => u.id === userId);
@@ -39,15 +53,38 @@ export class OrderComponent {
         return user ? user.name || user.email : ' ';
     }
 
+    showSuccessMessage(): void {
+        this.snackBar.open('Order successfully removed!', 'Close', {
+            duration: 3000,
+        });
+    }
+
     onCancelOrder(orderId: number): void {
-        this.cancelOrder(orderId)
+        const customerName = this.getUserName(this.order.userId);
+
+        const dialogRef = this.dialog.open(OrderConfirmDeleteComponent, {
+            data: {
+                orderId,
+                customerName,
+            },
+        });
+
+        dialogRef
+            .afterClosed()
             .pipe(
-                tap(() => {
-                    this.orderCanceled.emit(orderId);
-                }),
-                catchError(() => {
+                switchMap(result => {
+                    if (result) {
+                        return this.cancelOrder(orderId).pipe(
+                            tap(() => {
+                                this.orderCanceled.emit(orderId);
+                                this.showSuccessMessage();
+                            }),
+                        );
+                    }
+
                     return of(null);
                 }),
+                catchError(() => of(null)),
             )
             .subscribe();
     }

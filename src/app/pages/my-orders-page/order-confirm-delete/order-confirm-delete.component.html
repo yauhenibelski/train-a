@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Please confirm</h2>
+
+<mat-dialog-content>
+    <p>Do you want remove order#{{ data.orderId }} by {{ data.customerName }}?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="dialogRef.close(true)">Yes</button>
+    <button mat-button (click)="dialogRef.close(false)">No</button>
+</mat-dialog-actions>
