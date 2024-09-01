@@ -17,25 +17,23 @@
     <div class="startEndDetails">
         <div class="order-detail">
             <span class="detail-label">Start station: city</span>
-            <span class="detail-value">{{ order.path[0] }}</span>
+            <span class="detail-value">{{ order.stationStart }}</span>
         </div>
         <div class="order-detail">
             <span class="detail-label">Start time:</span>
-            <span class="detail-value">{{ formatDate(order.schedule.segments[0].time[0]) }}</span>
+            <span class="detail-value">{{ getDate(order, order.stationStart, 'start') }}</span>
         </div>
     </div>
 
     <div class="startEndDetails">
         <div class="order-detail">
             <span class="detail-label">End station: city</span>
-            <span class="detail-value">{{ order.path[order.path.length - 1] }}</span>
+            <span class="detail-value">{{ order.stationEnd }}</span>
         </div>
         <div class="order-detail">
             <span class="detail-label">End time:</span>
             <span class="detail-value">
-                {{
-                    formatDate(order.schedule.segments[order.schedule.segments.length - 1].time[1])
-                }}
+                {{ getDate(order, order.stationEnd, 'end') }}
             </span>
         </div>
     </div>
@@ -44,12 +42,7 @@
 <div class="order-detail">
     <span class="detail-label">Duration:</span>
     <span class="detail-value">
-        {{
-            calculateTripDuration(
-                order.schedule.segments[0].time[0],
-                order.schedule.segments[order.schedule.segments.length - 1].time[1]
-            )
-        }}
+        {{ calculateTripDuration(order, order.stationStart, order.stationEnd) }}
     </span>
 </div>
 
@@ -66,7 +59,7 @@
 <div class="order-detail price_data">
     <span class="detail-label">Price:</span>
     <span class="detail-value">
-        {{ calculateTotalPrice(order.schedule.segments, getCarriageName()) }}$
+        {{ calculateTotalPrice(order, order.stationStart, order.stationEnd, getCarriageName()) }}$
     </span>
 </div>
 

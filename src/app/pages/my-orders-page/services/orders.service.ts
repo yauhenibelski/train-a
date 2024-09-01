@@ -4,7 +4,6 @@ import { Observable, catchError, of } from 'rxjs';
 import { Order } from '@interface/order.interface';
 import { OrderList, UserList } from '@type/order.type';
 import { Carriages } from '@type/carriages.type';
-import { RideSegment } from '@interface/ride.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -103,17 +102,28 @@ export class OrdersService {
         return '';
     }
 
-    calculateTotalPrice(segments: RideSegment[], typeOfCarriage: string): number {
-        return segments.reduce((acc, segment) => {
+    calculateTotalPrice(
+        order: Order,
+        startStation: number,
+        endStation: number,
+        typeOfCarriage: string,
+    ): number {
+        const startStationIndex = order.path.indexOf(startStation);
+        const endStationIndex = order.path.indexOf(endStation);
+        const relevantSegments = order.schedule.segments.slice(startStationIndex, endStationIndex);
+
+        return relevantSegments.reduce((acc, segment) => {
             const price = segment.price[typeOfCarriage] || 0;
 
             return acc + price;
         }, 0);
     }
 
-    calculateTripDuration(startTime: string, endTime: string): string {
-        const startDate = new Date(startTime);
-        const endDate = new Date(endTime);
+    calculateTripDuration(order: Order, startStation: number, endStation: number): string {
+        const startStationIndex = order.path.indexOf(startStation);
+        const endStationIndex = order.path.indexOf(endStation) - 1;
+        const startDate = new Date(order.schedule.segments[startStationIndex].time[0]);
+        const endDate = new Date(order.schedule.segments[endStationIndex].time[1]);
         const differenceInMinutes = Math.floor(
             (endDate.getTime() - startDate.getTime()) / (1000 * 60),
         );
@@ -124,8 +134,17 @@ export class OrdersService {
         return `${hours}h ${minutes}m`;
     }
 
-    formatDate(dateString: string): string {
-        const date = new Date(dateString);
+    getDate(order: Order, stationName: number, place: 'start' | 'end'): string {
+        const stationIndex =
+            place === 'start'
+                ? order.path.indexOf(stationName)
+                : order.path.indexOf(stationName) - 1;
+
+        const date =
+            place === 'start'
+                ? new Date(order.schedule.segments[stationIndex].time[0])
+                : new Date(order.schedule.segments[stationIndex].time[1]);
+
         const months = [
             'January',
             'February',
@@ -140,10 +159,10 @@ export class OrdersService {
             'November',
             'December',
         ];
-        const month = months[date.getMonth()];
-        const day = date.getDate();
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const month = months[date.getUTCMonth()];
+        const day = date.getUTCDate();
+        const hours = String(date.getUTCHours()).padStart(2, '0');
+        const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 
         return `${month} ${day}, ${hours}:${minutes}`;
     }

@@ -17,6 +17,8 @@ export interface Order {
     schedule: Ride;
     userId: number;
     status: string;
+    stationEnd: number;
+    stationStart: number;
 }
 
 export interface User {

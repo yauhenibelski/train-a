@@ -10,7 +10,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Order } from '@interface/order.interface';
-import { RideSegment } from '@interface/ride.interface';
 import { UserList } from '@type/order.type';
 import { Observable, tap, catchError, of, switchMap } from 'rxjs';
 import { OrdersService } from '@pages/my-orders-page/services/orders.service';
@@ -101,15 +100,25 @@ export class OrderComponent {
         return this.ordersService.getCarriageName(this.order, this.carriageMap);
     }
 
-    calculateTotalPrice(segments: RideSegment[], typeOfCarriage: string): number {
-        return this.ordersService.calculateTotalPrice(segments, typeOfCarriage);
+    calculateTotalPrice(
+        order: Order,
+        startStation: number,
+        endStation: number,
+        typeOfCarriage: string,
+    ): number {
+        return this.ordersService.calculateTotalPrice(
+            order,
+            startStation,
+            endStation,
+            typeOfCarriage,
+        );
     }
 
-    calculateTripDuration(startTime: string, endTime: string): string {
-        return this.ordersService.calculateTripDuration(startTime, endTime);
+    calculateTripDuration(order: Order, startStation: number, endStation: number): string {
+        return this.ordersService.calculateTripDuration(order, startStation, endStation);
     }
 
-    formatDate(dateString: string): string {
-        return this.ordersService.formatDate(dateString);
+    getDate(order: Order, stationName: number, place: 'start' | 'end'): string {
+        return this.ordersService.getDate(order, stationName, place);
     }
 }
