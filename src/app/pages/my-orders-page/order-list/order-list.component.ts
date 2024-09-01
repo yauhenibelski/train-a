@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CarriageActions } from '@store/carriages/carriages.actions';
 import { selectAllCarriages } from '@store/carriages/carriages.selectors';
@@ -24,6 +24,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     users: UserList = [];
     carriages$: Observable<Carriages>;
     carriageMap: Record<string, number> = {};
+    private readonly subscriptions: Subscription = new Subscription();
 
     constructor(
         private readonly ordersService: OrdersService,
@@ -33,23 +34,16 @@ export class OrderListComponent implements OnInit, OnDestroy {
         this.store.dispatch(CarriageActions.loadAll());
         this.carriages$ = this.store.select(selectAllCarriages);
 
-        this.ordersService
+        const fetchOrdersSub = this.ordersService
             .fetchOrders()
             .pipe(tap(orders => this.ordersSubject.next(orders)))
             .subscribe();
 
-        this.ordersService
-            .createOrder(9, 60, 70, 52)
-            .pipe(
-                tap(order => {
-                    console.info(order);
-                }),
-            )
-            .subscribe();
+        this.subscriptions.add(fetchOrdersSub);
     }
 
     ngOnInit(): void {
-        this.authService.userType$
+        const userTypeSub = this.authService.userType$
             .pipe(
                 switchMap(userType => {
                     if (userType === 'admin') {
@@ -64,17 +58,21 @@ export class OrderListComponent implements OnInit, OnDestroy {
             )
             .subscribe();
 
-        this.carriages$
+        this.subscriptions.add(userTypeSub);
+
+        const carriagesSub = this.carriages$
             .pipe(
                 tap(carriages => {
                     this.carriageMap = this.ordersService.createCarriageMap(carriages);
                 }),
             )
             .subscribe();
+
+        this.subscriptions.add(carriagesSub);
     }
 
     onOrderCanceled(): void {
-        this.ordersService
+        const fetchOrdersSub = this.ordersService
             .fetchOrders()
             .pipe(
                 tap(orders => {
@@ -82,9 +80,12 @@ export class OrderListComponent implements OnInit, OnDestroy {
                 }),
             )
             .subscribe();
+
+        this.subscriptions.add(fetchOrdersSub);
     }
 
     ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
         this.ordersSubject.complete();
     }
 }
