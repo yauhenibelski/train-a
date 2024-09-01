@@ -49,7 +49,6 @@ export class OrdersService {
 
         return this.http.post<Order>(this.ordersApiUrl, orderData).pipe(
             catchError((error: unknown) => {
-                // Указание типа ошибки
                 console.error('Error creating order:', error);
 
                 return of(null);

@@ -1,5 +1,5 @@
 <div class="order_header">
-    <div class="order-detail">
+    <div class="order-detail order_userName">
         <span class="detail-value">{{ getUserName(order.userId) }}</span>
     </div>
     <button
@@ -74,7 +74,13 @@
     <div class="order-detail">
         <span class="detail-value">{{ getCarriageName() }}</span>
     </div>
-    <div class="order-detail">
+    <div
+        class="order-detail order_status"
+        [ngClass]="{
+            'status-active': order.status === 'active',
+            'status-rejected': order.status === 'rejected',
+        }"
+    >
         <span class="detail-value">{{ order.status }}</span>
     </div>
 </div>

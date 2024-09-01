@@ -45,14 +45,14 @@ export class OrderListComponent implements OnInit, OnDestroy {
             )
             .subscribe();
 
-        /* this.ordersService
-            .createOrder(13, 100, 128, 114)
+        this.ordersService
+            .createOrder(1, 100, 76, 54)
             .pipe(
                 tap(order => {
                     console.info(order);
                 }),
             )
-            .subscribe(); */
+            .subscribe();
     }
 
     ngOnInit(): void {
