@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CarriageActions } from '@store/carriages/carriages.actions';
 import { selectAllCarriages } from '@store/carriages/carriages.selectors';
 import { Carriages } from '@type/carriages.type';
 import { OrderList, UserList } from '@type/order.type';
 import { OrdersService } from '@pages/my-orders-page/services/orders.service';
+import { AuthService } from '@shared/service/auth/auth.service';
 import { OrderComponent } from '../order/order.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     constructor(
         private readonly ordersService: OrdersService,
         private readonly store: Store,
+        private readonly authService: AuthService,
     ) {
         this.store.dispatch(CarriageActions.loadAll());
         this.carriages$ = this.store.select(selectAllCarriages);
@@ -37,25 +39,31 @@ export class OrderListComponent implements OnInit, OnDestroy {
             .subscribe();
 
         this.ordersService
-            .fetchUsers()
-            .pipe(
-                tap(users => {
-                    this.users = users;
-                }),
-            )
-            .subscribe();
-
-        /* this.ordersService
             .createOrder(9, 60, 70, 52)
             .pipe(
                 tap(order => {
                     console.info(order);
                 }),
             )
-            .subscribe(); */
+            .subscribe();
     }
 
     ngOnInit(): void {
+        this.authService.userType$
+            .pipe(
+                switchMap(userType => {
+                    if (userType === 'admin') {
+                        return this.ordersService.fetchUsers();
+                    }
+
+                    return of([]);
+                }),
+                tap(users => {
+                    this.users = users;
+                }),
+            )
+            .subscribe();
+
         this.carriages$
             .pipe(
                 tap(carriages => {

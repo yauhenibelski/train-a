@@ -78,7 +78,7 @@
         class="order-detail order_status"
         [ngClass]="{
             'status-active': order.status === 'active',
-            'status-rejected': order.status === 'rejected',
+            'status-rejected': order.status === 'rejected' || order.status === 'canceled',
         }"
     >
         <span class="detail-value">{{ order.status }}</span>
