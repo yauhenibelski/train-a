@@ -101,10 +101,6 @@ export class SingUpComponent implements OnInit {
             email.setValue('');
             email.setErrors(controlErr);
 
-            return;
-        }
-
-        if (message?.match(/([pP]assword)/)) {
             password.setValue('');
             password.setErrors(controlErr);
         }
