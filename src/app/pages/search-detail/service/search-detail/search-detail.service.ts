@@ -1,5 +1,4 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RideDetail } from '@interface/ride.interface';
@@ -27,6 +26,7 @@ import {
     throwError,
     withLatestFrom,
 } from 'rxjs';
+import { SnackBarMassageService } from '@shared/service/snack-bar-massage/snack-bar-massage.service';
 
 @Injectable()
 export class SearchDetailService {
@@ -104,7 +104,7 @@ export class SearchDetailService {
         private readonly router: Router,
         private readonly httpClient: HttpClient,
         private readonly activatedRoute: ActivatedRoute,
-        private readonly snackBar: MatSnackBar,
+        private readonly snackBar: SnackBarMassageService,
     ) {}
 
     makeOrder(): void {
@@ -133,26 +133,17 @@ export class SearchDetailService {
                     this.loadRide(`${rideId}`);
                     this.closeReservation();
 
-                    this.openSnackBar('Ride successfully booked', false);
+                    this.snackBar.open('Ride successfully booked', false);
                 },
                 complete: () => {
                     this.rideSubscription = null;
                 },
                 error: (err: unknown) => {
                     if (err instanceof HttpErrorResponse) {
-                        this.openSnackBar(err.error.message, true);
+                        this.snackBar.open(err.error.message, true);
                     }
                 },
             });
-    }
-
-    openSnackBar(massage: string, isError: boolean): void {
-        this.snackBar.open(`${massage}`, undefined, {
-            duration: 2000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: isError ? 'snack-bar-err' : 'snack-bar-success',
-        });
     }
 
     setSeat(seat: SelectedSeat): void {
