@@ -1,0 +1,66 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.order_header,
+.order_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seat_data {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.startEndData_box {
+    display: flex;
+    gap: 20px;
+}
+
+@media screen and (max-width: 680px) {
+    .startEndData_box {
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+    }
+}
+
+.startEndDetails {
+    padding: 10px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+.price_data {
+    font-weight: bold;
+}
+
+.order_userName {
+    padding: 0px 10px;
+    background-color: rgb(6, 114, 255);
+    color: white;
+    border-radius: 5px;
+}
+
+.order_status {
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+
+.status-active {
+    background-color: rgb(2, 210, 2);
+    color: white;
+}
+
+.status-rejected {
+    background-color: rgb(255, 34, 34);
+    color: white;
+}

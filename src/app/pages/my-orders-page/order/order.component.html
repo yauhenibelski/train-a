@@ -1,0 +1,79 @@
+<div class="order_header">
+    <div class="order-detail order_userName">
+        <span class="detail-value">{{ getUserName(order.userId) }}</span>
+    </div>
+    <button
+        *ngIf="order.status === 'active'"
+        mat-icon-button
+        type="button"
+        class="delete_button"
+        (click)="onCancelOrder(order.id)"
+    >
+        <mat-icon>delete</mat-icon>
+    </button>
+</div>
+
+<div class="startEndData_box">
+    <div class="startEndDetails">
+        <div class="order-detail">
+            <span class="detail-label">Start station: city</span>
+            <span class="detail-value">{{ order.stationStart }}</span>
+        </div>
+        <div class="order-detail">
+            <span class="detail-label">Start time:</span>
+            <span class="detail-value">{{ getDate(order, order.stationStart, 'start') }}</span>
+        </div>
+    </div>
+
+    <div class="startEndDetails">
+        <div class="order-detail">
+            <span class="detail-label">End station: city</span>
+            <span class="detail-value">{{ order.stationEnd }}</span>
+        </div>
+        <div class="order-detail">
+            <span class="detail-label">End time:</span>
+            <span class="detail-value">
+                {{ getDate(order, order.stationEnd, 'end') }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="order-detail">
+    <span class="detail-label">Duration:</span>
+    <span class="detail-value">
+        {{ calculateTripDuration(order, order.stationStart, order.stationEnd) }}
+    </span>
+</div>
+
+<div class="seat_data">
+    <div class="order-detail">
+        <span class="detail-label">Car number:</span>
+        <span class="detail-value">{{ getCarriageNumber() }}</span>
+    </div>
+    <div class="order-detail">
+        <span class="detail-label">Seat number:</span>
+        <span class="detail-value">{{ order.seatId }}</span>
+    </div>
+</div>
+<div class="order-detail price_data">
+    <span class="detail-label">Price:</span>
+    <span class="detail-value">
+        {{ calculateTotalPrice(order, order.stationStart, order.stationEnd, getCarriageName()) }}$
+    </span>
+</div>
+
+<div class="order_footer">
+    <div class="order-detail">
+        <span class="detail-value">{{ getCarriageName() }}</span>
+    </div>
+    <div
+        class="order-detail order_status"
+        [ngClass]="{
+            'status-active': order.status === 'active',
+            'status-rejected': order.status === 'rejected' || order.status === 'canceled',
+        }"
+    >
+        <span class="detail-value">{{ order.status }}</span>
+    </div>
+</div>
