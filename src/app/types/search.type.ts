@@ -1,3 +1,12 @@
+import { Station } from '@interface/station.interface';
+
+export type SearchForm = {
+    startCity: string | Station;
+    endCity: string | Station;
+    date: string;
+    time: string;
+};
+
 export type Geolocation = {
     latitude: number;
     longitude: number;

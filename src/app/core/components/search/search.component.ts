@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -16,6 +16,8 @@ import { Station } from '@interface/station.interface';
 import { getTomorrow } from '@shared/utils/get-tomorrow';
 import { GetControlErrorMessagePipe } from '@shared/pipes/get-control-error-message/get-control-error-message.pipe';
 import { futureDateValidator } from '@shared/form-validators/future-date.validator';
+import { selectSearch } from '@store/search/search.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FilterPipe } from './pipe/filter.pipe';
 
 @Component({
@@ -38,7 +40,8 @@ import { FilterPipe } from './pipe/filter.pipe';
     styleUrl: './search.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
+    readonly search = toSignal(this.store.select(selectSearch));
     readonly stationList = input<StationList>();
 
     readonly minDate: Date = getTomorrow();
@@ -52,6 +55,12 @@ export class SearchComponent {
 
     constructor(private readonly store: Store) {}
 
+    ngOnInit(): void {
+        if (this.search()) {
+            this.searchForm.patchValue({ ...this.search() });
+        }
+    }
+
     onSubmit(): void {
         if (this.isCityStation(this.getStartCity) && this.isCityStation(this.getEndCity)) {
             const formattedDate = new Date(this.getDate);
@@ -62,6 +71,15 @@ export class SearchComponent {
                 formattedDate.setHours(Number(hours));
                 formattedDate.setMinutes(Number(minutes));
             }
+
+            this.store.dispatch(
+                SearchActions.setSearch({
+                    startCity: this.getStartCity,
+                    endCity: this.getEndCity,
+                    date: this.getDate,
+                    time: this.getTime,
+                }),
+            );
 
             this.store.dispatch(
                 SearchActions.loadAll({

@@ -5,4 +5,5 @@ import { searchInitialState } from './search.state';
 export const searchReducer = createReducer(
     searchInitialState,
     on(SearchActions.setAll, (state, { searchStations }) => ({ ...state, searchStations })),
+    on(SearchActions.setSearch, (state, { search }) => ({ ...state, search })),
 );
