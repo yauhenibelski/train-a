@@ -18,7 +18,14 @@
             @if (isSaving) {
                 <mat-spinner class="input-icon" [diameter]="25" [strokeWidth]="3" />
             } @else if (isEditMode) {
-                <mat-icon class="input-icon" (click)="updateValues()">save</mat-icon>
+                <button
+                    mat-icon-button
+                    class="input-icon"
+                    [disabled]="!profileForm.valid"
+                    (click)="updateValues()"
+                >
+                    <mat-icon>save</mat-icon>
+                </button>
             } @else {
                 <mat-icon class="input-icon" (click)="changeValues()">edit</mat-icon>
             }
@@ -36,7 +43,14 @@
             @if (isSaving) {
                 <mat-spinner class="input-icon" [diameter]="25" [strokeWidth]="3" />
             } @else if (isEditMode) {
-                <mat-icon class="input-icon" (click)="updateValues()">save</mat-icon>
+                <button
+                    mat-icon-button
+                    class="input-icon"
+                    [disabled]="!profileForm.valid"
+                    (click)="updateValues()"
+                >
+                    <mat-icon>save</mat-icon>
+                </button>
             } @else {
                 <mat-icon class="input-icon" (click)="changeValues()">edit</mat-icon>
             }
