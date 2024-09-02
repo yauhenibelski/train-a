@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CarriageService } from './services/carriage.service';
 import { IsSeatFreePipe } from './pipe/is-seat-free/is-seat-free.pipe';
+import { SeatComponent } from '../seat/seat.component';
 
 @Component({
     selector: 'app-carriage',
@@ -23,7 +24,7 @@ import { IsSeatFreePipe } from './pipe/is-seat-free/is-seat-free.pipe';
     templateUrl: './carriage.component.html',
     styleUrls: ['./carriage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, NgIf, MatButtonModule, MatIconModule, NgClass, IsSeatFreePipe],
+    imports: [NgFor, NgIf, MatButtonModule, MatIconModule, NgClass, IsSeatFreePipe, SeatComponent],
     providers: [CarriageService, SeatComponent],
 })
 export class CarriageComponent implements OnInit, OnChanges {
