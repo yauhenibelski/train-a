@@ -15,3 +15,14 @@ export const getAllStations = createEffect(
         ),
     { functional: true, dispatch: true },
 );
+
+export const createStation = createEffect(
+    (actions$ = inject(Actions), httpClient = inject(HttpClient)) =>
+        actions$.pipe(
+            ofType(StationsActions.createOne),
+            switchMap(station => httpClient.post<{ id: number }>('/api/station', station)),
+            map(() => StationsActions.loadAll()),
+            catchError(() => EMPTY),
+        ),
+    { functional: true, dispatch: true },
+);
