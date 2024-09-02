@@ -10,5 +10,6 @@ export const StationsActions = createActionGroup({
         'Add one': props<Station>(),
         'Create one': props<StationRequest>(),
         'Remove one': (id: number) => ({ id }),
+        'Remove one success': (id: number) => ({ id }),
     },
 });

@@ -28,4 +28,8 @@ export class StationsPageComponent {
     createOne(station: StationRequest) {
         this.store.dispatch(StationsActions.createOne(station));
     }
+
+    removeOne(id: number): void {
+        this.store.dispatch(StationsActions.removeOne(id));
+    }
 }

@@ -26,3 +26,17 @@ export const createStation = createEffect(
         ),
     { functional: true, dispatch: true },
 );
+
+export const removeStation = createEffect(
+    (actions$ = inject(Actions), httpClient = inject(HttpClient)) =>
+        actions$.pipe(
+            ofType(StationsActions.removeOne),
+            switchMap(({ id }) =>
+                httpClient.delete<{ id: number }>(`/api/station/${id}`).pipe(
+                    catchError(() => EMPTY),
+                    map(() => StationsActions.removeOneSuccess(id)),
+                ),
+            ),
+        ),
+    { functional: true, dispatch: true },
+);

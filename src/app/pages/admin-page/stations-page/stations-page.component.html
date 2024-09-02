@@ -8,5 +8,5 @@
         />
     </div>
 
-    <app-station-list [stationEntities]="stationEntities()" />
+    <app-station-list [stationEntities]="stationEntities()" (removeOne)="removeOne($event)" />
 </mat-card>
