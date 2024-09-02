@@ -159,10 +159,10 @@ export class OrdersService {
             'November',
             'December',
         ];
-        const month = months[date.getUTCMonth()];
-        const day = date.getUTCDate();
-        const hours = String(date.getUTCHours()).padStart(2, '0');
-        const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
 
         return `${month} ${day}, ${hours}:${minutes}`;
     }
