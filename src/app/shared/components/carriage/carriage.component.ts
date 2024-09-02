@@ -7,15 +7,16 @@ import {
     SimpleChanges,
     EventEmitter,
     Output,
+    Inject,
 } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Carriage } from '@interface/carriage.interface';
 import { Seat } from '@interface/seat.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { SeatComponent } from '../seat/seat.component';
 import { CarriageService } from './services/carriage.service';
 import { IsSeatFreePipe } from './pipe/is-seat-free/is-seat-free.pipe';
+import { SeatComponent } from '../seat/seat.component';
 
 @Component({
     selector: 'app-carriage',
@@ -23,8 +24,8 @@ import { IsSeatFreePipe } from './pipe/is-seat-free/is-seat-free.pipe';
     templateUrl: './carriage.component.html',
     styleUrls: ['./carriage.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SeatComponent, NgFor, NgIf, MatButtonModule, MatIconModule, NgClass, IsSeatFreePipe],
-    providers: [CarriageService],
+    imports: [NgFor, NgIf, MatButtonModule, MatIconModule, NgClass, IsSeatFreePipe, SeatComponent],
+    providers: [CarriageService, SeatComponent],
 })
 export class CarriageComponent implements OnInit, OnChanges {
     @Input({ required: true }) carriage: Carriage | null = null;
@@ -38,7 +39,7 @@ export class CarriageComponent implements OnInit, OnChanges {
 
     rotatedSeatingMatrices: Seat[][] = [];
 
-    constructor(private readonly carriageService: CarriageService) {}
+    constructor(@Inject(CarriageService) private readonly carriageService: CarriageService) {}
 
     ngOnInit() {
         this.updateSeatingMatrix();

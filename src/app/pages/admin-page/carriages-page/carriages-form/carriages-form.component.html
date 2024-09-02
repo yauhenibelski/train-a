@@ -13,6 +13,9 @@
         >
             <p class="error-message">Name is required.</p>
         </div>
+        <div *ngIf="nameExists" class="error-message">
+            A carriage with that name already exists.
+        </div>
     </div>
 
     <div>
@@ -103,5 +106,7 @@
         [isSmallModel]="true"
     ></app-carriage>
 
-    <button mat-stroked-button type="submit" [disabled]="carriageForm.invalid">Save</button>
+    <button mat-stroked-button type="submit" [disabled]="carriageForm.invalid">
+        {{ (isCreate$ | async) ? 'Save' : 'Update' }}
+    </button>
 </form>

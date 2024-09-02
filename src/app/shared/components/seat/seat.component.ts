@@ -5,7 +5,7 @@ import { SeatBackgroundDirective } from './directives/seat-background.directive'
 @Component({
     selector: 'app-seat',
     standalone: true,
-    imports: [SeatBackgroundDirective, NgClass],
+    imports: [NgClass, SeatBackgroundDirective],
     templateUrl: './seat.component.html',
     styleUrls: ['./seat.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
