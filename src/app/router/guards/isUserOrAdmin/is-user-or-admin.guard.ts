@@ -9,10 +9,10 @@ export const isUserOrAdminGuard: CanMatchFn = () => {
     return inject(AuthService).userType$.pipe(
         map(type => {
             if (type === 'user' || type === 'admin') {
-                router.navigateByUrl('/');
-
                 return true;
             }
+
+            router.navigateByUrl('/');
 
             return false;
         }),
