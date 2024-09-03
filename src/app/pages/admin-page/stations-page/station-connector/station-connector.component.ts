@@ -52,6 +52,8 @@ export class StationConnectorComponent {
         validators: ({ value }) => (value.length ? null : { tag: 'At least one city' }),
     });
 
+    superPuperUserChooosingArrayOfIds: number[] = [];
+
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly connectStationService: ConnectStationService,
@@ -61,16 +63,30 @@ export class StationConnectorComponent {
             .pipe(
                 takeUntilDestroyed(),
                 withLatestFrom(this.stationsEntities$),
-                map(([ids, stationsEntities]) =>
-                    ids.map(id => {
+                map(([ids, stationsEntities]) => {
+                    if (ids.length > this.superPuperUserChooosingArrayOfIds.length) {
+                        const newId = ids.find(
+                            uniqId => !this.superPuperUserChooosingArrayOfIds.includes(uniqId),
+                        );
+
+                        if (newId) {
+                            this.superPuperUserChooosingArrayOfIds.push(newId);
+                        }
+                    } else {
+                        this.superPuperUserChooosingArrayOfIds =
+                            this.superPuperUserChooosingArrayOfIds.filter(uniqId =>
+                                ids.includes(uniqId),
+                            );
+                    }
+
+                    return this.superPuperUserChooosingArrayOfIds.map(id => {
                         const station = stationsEntities[id];
 
                         return [station!.latitude, station!.longitude];
-                    }),
-                ),
+                    });
+                }),
             )
             .subscribe(latLng => {
-                // console.log(latLng)
                 this.connectStationService.pathLine.set(latLng);
             });
     }
