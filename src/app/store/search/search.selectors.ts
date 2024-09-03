@@ -4,3 +4,4 @@ import { SEARCH_FEATURE, SearchState } from './search.state';
 const searchFeature = createFeatureSelector<SearchState>(SEARCH_FEATURE);
 
 export const selectSearchStations = createSelector(searchFeature, state => state.searchStations);
+export const selectSearch = createSelector(searchFeature, state => state.search);
