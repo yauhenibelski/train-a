@@ -13,6 +13,10 @@ import { hasGaps } from '@shared/form-validators/has-gaps.validator';
 import { LeafletMouseEvent } from 'leaflet';
 import { GetControlErrorMessagePipe } from '@shared/pipes/get-control-error-message/get-control-error-message.pipe';
 import { StationList, StationRequest } from '@type/station.type';
+import { Store } from '@ngrx/store';
+import { selectStationsEntities } from '@store/stations/stations.selectors';
+import { withLatestFrom, map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConnectStationService } from '../services/connect-station/connect-station.service';
 
 @Component({
@@ -36,6 +40,7 @@ export class StationConnectorComponent {
     readonly createOne = output<StationRequest>();
 
     readonly selectedStation = this.connectStationService.selectedStation;
+    readonly stationsEntities$ = this.store.select(selectStationsEntities);
 
     readonly connectionForm = this.formBuilder.nonNullable.group({
         city: ['', [required(), hasGaps]],
@@ -50,7 +55,25 @@ export class StationConnectorComponent {
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly connectStationService: ConnectStationService,
-    ) {}
+        private readonly store: Store,
+    ) {
+        this.connectedStationControl.valueChanges
+            .pipe(
+                takeUntilDestroyed(),
+                withLatestFrom(this.stationsEntities$),
+                map(([ids, stationsEntities]) =>
+                    ids.map(id => {
+                        const station = stationsEntities[id];
+
+                        return [station!.latitude, station!.longitude];
+                    }),
+                ),
+            )
+            .subscribe(latLng => {
+                // console.log(latLng)
+                this.connectStationService.pathLine.set(latLng);
+            });
+    }
 
     selectStation(station: Station): void {
         this.connectStationService.selectStation(station);

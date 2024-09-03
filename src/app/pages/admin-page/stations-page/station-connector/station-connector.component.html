@@ -32,7 +32,7 @@
         <mat-label>Connected city</mat-label>
         <mat-select [multiple]="true" [formControl]="connectedStationControl">
             @for (station of stationList(); track station.id) {
-                <mat-option [value]="station.id" [disabled]="selectedStation()?.id === station.id">
+                <mat-option [value]="station.id">
                     {{ station.city }}
                 </mat-option>
             }

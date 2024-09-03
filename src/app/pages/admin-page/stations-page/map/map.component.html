@@ -2,8 +2,10 @@
     leaflet
     [style.height.%]="100"
     [leafletOptions]="options"
+    [leafletLayer]="lines()"
     [leafletCenter]="latLng()"
-    (leafletClick)="selectLeaflet.emit($event)"
+    (leafletClick)="selectLeaflet.emit($event); point.set($event)"
+    (leafletMouseOut)="point.set(null)"
 >
     @for (station of stationList(); track station.id) {
         <div [leafletLayer]="station | toMarker: selectStation"></div>
