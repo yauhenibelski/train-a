@@ -103,6 +103,7 @@ export class StationConnectorComponent {
     submit(): void {
         this.addStation();
         this.connectionForm.reset();
+        this.connectedStationControl.reset();
     }
 
     setLeaflet({ latlng }: LeafletMouseEvent) {
