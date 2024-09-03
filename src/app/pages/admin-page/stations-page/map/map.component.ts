@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    effect,
+    input,
+    output,
+    signal,
+} from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { MapOptions, tileLayer, latLng, LeafletMouseEvent } from 'leaflet';
+import { MapOptions, tileLayer, latLng, LeafletMouseEvent, polyline, LatLngTuple } from 'leaflet';
 import { Station } from '@interface/station.interface';
 import { StationList } from '@type/station.type';
 import { ToMarkerPipe } from '../../pipe/to-marker/to-marker.pipe';
@@ -20,6 +29,8 @@ export class MapComponent {
 
     readonly selectLeaflet = output<LeafletMouseEvent>();
 
+    readonly point = signal<LeafletMouseEvent | null>(null);
+
     readonly latLng = computed(() => {
         const selectedStation = this.connectStationService.selectedStation();
 
@@ -34,6 +45,17 @@ export class MapComponent {
         return this.latLngCash;
     });
 
+    lines = computed(() => {
+        const point = this.point();
+        const pathLines = [...this.connectStationService.pathLine()] as LatLngTuple[];
+
+        if (point && pathLines.length > 1) {
+            return polyline([...pathLines, [point.latlng.lat, point.latlng.lng]] as LatLngTuple[]);
+        }
+
+        return polyline([...pathLines]);
+    });
+
     readonly options: MapOptions = {
         layers: [tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 })],
         zoom: 5,
@@ -44,5 +66,14 @@ export class MapComponent {
         this.connectStationService.selectStation(station);
     };
 
-    constructor(readonly connectStationService: ConnectStationService) {}
+    constructor(
+        readonly connectStationService: ConnectStationService,
+        c: ChangeDetectorRef,
+    ) {
+        effect(() => {
+            if (this.lines()) {
+                c.markForCheck();
+            }
+        });
+    }
 }

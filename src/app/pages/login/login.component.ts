@@ -58,7 +58,7 @@ export class LoginComponent {
                     return;
                 }
 
-                const message = err.error.message;
+                const message = 'Incorrect email or password';
 
                 this.handleErr(message);
             },
@@ -69,16 +69,10 @@ export class LoginComponent {
         const { email, password } = this.loginForm.controls;
         const controlErr = { error: message };
 
-        if (message?.match(/([Ee]mail|[Uu]ser)/)) {
-            email.setValue('');
-            email.setErrors(controlErr);
+        email.setValue('');
+        email.setErrors(controlErr);
 
-            return;
-        }
-
-        if (message?.match(/([pP]assword)/)) {
-            password.setValue('');
-            password.setErrors(controlErr);
-        }
+        password.setValue('');
+        password.setErrors(controlErr);
     }
 }

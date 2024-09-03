@@ -1,6 +1,6 @@
 import { Station } from '@interface/station.interface';
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { StationList } from '@type/station.type';
+import { StationList, StationRequest } from '@type/station.type';
 
 export const StationsActions = createActionGroup({
     source: 'Station',
@@ -8,6 +8,8 @@ export const StationsActions = createActionGroup({
         'Load all': emptyProps(),
         'Set all': (stations: StationList) => ({ stations }),
         'Add one': props<Station>(),
+        'Create one': props<StationRequest>(),
         'Remove one': (id: number) => ({ id }),
+        'Remove one success': (id: number) => ({ id }),
     },
 });

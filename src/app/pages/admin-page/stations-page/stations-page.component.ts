@@ -3,6 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { selectAllStations, selectStationsEntities } from '@store/stations/stations.selectors';
 import { Store } from '@ngrx/store';
 import { MatCardModule } from '@angular/material/card';
+import { StationRequest } from '@type/station.type';
+import { StationsActions } from '@store/stations/stations.actions';
 import { MapComponent } from './map/map.component';
 import { StationListComponent } from './station-list/station-list.component';
 import { StationConnectorComponent } from './station-connector/station-connector.component';
@@ -22,4 +24,12 @@ export class StationsPageComponent {
     readonly stationEntities = toSignal(this.store.select(selectStationsEntities));
 
     constructor(private readonly store: Store) {}
+
+    createOne(station: StationRequest) {
+        this.store.dispatch(StationsActions.createOne(station));
+    }
+
+    removeOne(id: number): void {
+        this.store.dispatch(StationsActions.removeOne(id));
+    }
 }

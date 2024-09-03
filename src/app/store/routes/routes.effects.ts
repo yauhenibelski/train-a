@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, map, switchMap } from 'rxjs';
 import { Routes } from '@type/roures.type';
 import { Route } from '@interface/route.interface';
+import { Router } from '@angular/router';
 import { RoutesActions } from './routes.actions';
 
 export const getAllRoutes = createEffect(
@@ -54,14 +55,18 @@ export const updateRoute = createEffect(
 );
 
 export const createRoute = createEffect(
-    (actions$ = inject(Actions), httpClient = inject(HttpClient)) =>
+    (actions$ = inject(Actions), httpClient = inject(HttpClient), router = inject(Router)) =>
         actions$.pipe(
             ofType(RoutesActions.createCurrent),
             switchMap(({ route, err }) => {
                 const { carriages, path } = route;
 
                 return httpClient.post<Pick<Route, 'id'>>(`/api/route`, { carriages, path }).pipe(
-                    map(({ id }) => RoutesActions.addOne({ id, ...route })),
+                    map(({ id }) => {
+                        router.navigateByUrl(`/admin/routes/${id}`);
+
+                        return RoutesActions.addOne({ id, ...route });
+                    }),
                     catchError((errMgs: unknown) => {
                         err(errMgs);
 
