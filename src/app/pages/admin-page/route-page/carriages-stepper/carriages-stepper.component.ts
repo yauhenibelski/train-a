@@ -38,7 +38,7 @@ export class CarriagesStepperComponent implements OnChanges {
 
     readonly carriagesForm = this.formBuilder.nonNullable.array<string>([]);
 
-    selectCity(carriagesFormIndex: number, type: string): void {
+    editOne(carriagesFormIndex: number, type: string): void {
         const { controls } = this.carriagesForm;
 
         controls[carriagesFormIndex].setValue(type);
