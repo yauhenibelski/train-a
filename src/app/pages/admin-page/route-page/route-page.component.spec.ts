@@ -17,7 +17,7 @@ describe('RoutePageComponent', () => {
     let matDialog = {
         open: () => ({
             afterClosed: () => of<boolean | Route | null>(true),
-            afterOpened: () => EMPTY,
+            afterOpened: () => of(null),
         }),
     };
     let store: MockStore;
