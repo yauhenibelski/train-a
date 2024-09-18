@@ -59,7 +59,7 @@ export class StationStepperComponent {
 
     private readonly selectedStation = signal<number[]>([]);
 
-    readonly stationEntities = input<Dictionary<Station>>();
+    readonly stationEntities = input<Dictionary<Station> | null>();
     readonly pathIds = input<number[]>();
     readonly position = input<number>();
 

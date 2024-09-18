@@ -21,7 +21,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     ],
 })
 export class CarriagesStepperComponent {
-    readonly carriagesTypes = input<string[]>();
+    readonly carriagesTypes = input<string[] | null>();
     readonly carriages = input<string[]>();
 
     constructor(

@@ -4,9 +4,9 @@
 </button>
 
 <app-route-list
-    [routes]="routes()"
-    [stationEntities]="stationEntities()"
-    [carriagesTypes]="carriagesTypes()"
+    [routes]="routes$ | async"
+    [stationEntities]="stationEntities$ | async"
+    [carriagesTypes]="carriagesTypes$ | async"
     (updateOne)="updateRoute($event)"
     (removeOne)="removeRoute($event)"
 />
