@@ -36,7 +36,7 @@ import { ConnectStationService } from '../services/connect-station/connect-stati
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StationConnectorComponent {
-    readonly stationList = input<StationList>();
+    readonly stationList = input<StationList | null>();
     readonly createOne = output<StationRequest>();
 
     readonly selectedStation = this.connectStationService.selectedStation;
