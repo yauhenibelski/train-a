@@ -35,19 +35,11 @@ export class RoutePageComponent {
     ) {}
 
     updateRoute(route: Route): void {
-        this.store.dispatch(
-            RoutesActions.updateCurrent(route, (_err: unknown) => {
-                // Todo: handle err
-            }),
-        );
+        this.store.dispatch(RoutesActions.updateCurrent(route));
     }
 
     createRoute(route: Omit<Route, 'id'>): void {
-        this.store.dispatch(
-            RoutesActions.createCurrent(route, (_err: unknown) => {
-                // Todo: handle err
-            }),
-        );
+        this.store.dispatch(RoutesActions.createCurrent(route));
     }
 
     removeRoute(id: Route['id']): void {
@@ -58,11 +50,7 @@ export class RoutePageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(boolean => {
                 if (boolean) {
-                    this.store.dispatch(
-                        RoutesActions.removeCurrent(id, (_err: unknown) => {
-                            // Todo: handle err
-                        }),
-                    );
+                    this.store.dispatch(RoutesActions.removeCurrent(id));
                 }
             });
     }
