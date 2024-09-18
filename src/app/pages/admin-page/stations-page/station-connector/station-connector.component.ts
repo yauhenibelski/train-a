@@ -49,7 +49,7 @@ export class StationConnectorComponent {
     });
 
     readonly connectedStationControl = this.formBuilder.nonNullable.control<number[]>([], {
-        validators: ({ value }) => (value.length ? null : { tag: 'At least one city' }),
+        validators: ({ value }) => (value.length >= 3 ? null : { tag: 'At least three city' }),
     });
 
     constructor(
@@ -116,6 +116,6 @@ export class StationConnectorComponent {
     }
 
     get isFormValid(): boolean {
-        return this.connectedStationControl.value.length >= 3 && this.connectionForm.valid;
+        return this.connectedStationControl.valid && this.connectionForm.valid;
     }
 }
