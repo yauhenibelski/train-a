@@ -4,10 +4,10 @@ import {
     Component,
     computed,
     DestroyRef,
-    effect,
-    Injector,
     input,
+    OnChanges,
     signal,
+    SimpleChanges,
     TemplateRef,
     viewChild,
     viewChildren,
@@ -52,7 +52,7 @@ import { GetCityNamePipe } from '@shared/pipes/get-city-name/get-city-name.pipe'
         },
     ],
 })
-export class StationStepperComponent {
+export class StationStepperComponent implements OnChanges {
     private readonly stepContainer = viewChildren('stepContainer', { read: ViewContainerRef });
     private readonly selectOptionsTemplate =
         viewChild.required<TemplateRef<{ $implicit: number }>>('selectOptions');
@@ -74,11 +74,19 @@ export class StationStepperComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly injector: Injector,
         private readonly destroyRef: DestroyRef,
     ) {
-        this.watchRoute();
         this.watchStationsFormValueChanges();
+    }
+
+    ngOnChanges({ pathIds }: SimpleChanges): void {
+        if (pathIds?.currentValue) {
+            this.pathIds()?.forEach(id => {
+                const newStationControl = this.formBuilder.nonNullable.control(id);
+
+                this.stationsForm.push(newStationControl);
+            });
+        }
     }
 
     readonly stationsForm = this.formBuilder.nonNullable.array<number>([]);
@@ -116,19 +124,6 @@ export class StationStepperComponent {
             stepContainer.clear();
             stepContainer.createEmbeddedView(this.selectOptionsTemplate(), { $implicit: idx });
         }
-    }
-
-    private watchRoute(): void {
-        effect(
-            () => {
-                this.pathIds()?.forEach(id => {
-                    const newStationControl = this.formBuilder.nonNullable.control(id);
-
-                    this.stationsForm.push(newStationControl);
-                });
-            },
-            { injector: this.injector },
-        );
     }
 
     private watchStationsFormValueChanges(): void {
