@@ -6,10 +6,19 @@ import { ActivatedRoute } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EMPTY, of } from 'rxjs';
 import { By, Title } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteComponent } from '@shared/components/confirm-delete/confirm-delete.component';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { RideComponent } from './ride/ride.component';
+
+@Component({
+    selector: 'app-ride',
+    standalone: true,
+    template: '<div></div>',
+    inputs: ['path', 'ride'],
+})
+class MockRideComponent {}
 
 describe('SchedulePageComponent', () => {
     let fixture: ComponentFixture<SchedulePageComponent>;
@@ -42,6 +51,11 @@ describe('SchedulePageComponent', () => {
                     useValue: matDialog,
                 },
             ],
+        });
+
+        testBet.overrideComponent(SchedulePageComponent, {
+            remove: { imports: [RideComponent] },
+            add: { imports: [MockRideComponent] },
         });
 
         testBet.overrideProvider(ScheduleService, {
